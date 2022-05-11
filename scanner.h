@@ -22,6 +22,7 @@ private:
     void add_token(TokenType type);
     void add_token(TokenType type, Literal *literal);
     bool is_at_end();
+    bool match(char expected);
     void scan_token();
 };
 

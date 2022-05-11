@@ -21,6 +21,17 @@ void Scanner::add_token(TokenType type, Literal *literal) {
     tokens.push_back(token);
 }
 
+bool Scanner::is_at_end() {
+    return current >= source.length();
+}
+
+bool Scanner::match(char expected) {
+    if (is_at_end()) return false;
+    if (source[current] != expected) return false;
+    current++;
+    return true;
+}
+
 void Scanner::scan_token() {
     char c = advance();
     switch (c) {
@@ -34,12 +45,14 @@ void Scanner::scan_token() {
         case '+': add_token(TokenType::PLUS); break;
         case ';': add_token(TokenType::SEMICOLON); break;
         case '*': add_token(TokenType::STAR); break;
+
+        case '!': add_token(match('=') ? TokenType::BANG_EQUAL : TokenType::BANG); break;
+        case '=': add_token(match('=') ? TokenType::EQUAL_EQUAL : TokenType::EQUAL); break;
+        case '<': add_token(match('=') ? TokenType::GREATER_EQUAL : TokenType::GREATER); break;
+        case '>': add_token(match('=') ? TokenType::LESS_EQUAL : TokenType::LESS); break;
+
         default: lox::error(line, "Unexpected character."); break;
     }
-}
-
-bool Scanner::is_at_end() {
-    return current >= source.length();
 }
 
 std::vector<Token> Scanner::scan_tokens() {
