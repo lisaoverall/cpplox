@@ -12,8 +12,8 @@ std::string Literal::to_string() const {
     return "";
 }
 
-Token::Token(TokenType t, const std::string& lxm, const Literal& ltrl, int ln) :
-        type(t), lexeme(lxm), literal(ltrl), line(ln) {};
+Token::Token(TokenType t, const std::string& lxm, const Literal *ltrl, int ln) :
+        type(t), lexeme(lxm), literal(*ltrl), line(ln) {};
 
 std::string Token::to_string() const {
     return token_type_to_string(type) + " " + lexeme + " " + literal.to_string();

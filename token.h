@@ -64,7 +64,7 @@ public:
     const std::string lexeme;
     const Literal literal;
     const int line;
-    Token(TokenType t, const std::string& lxm, const Literal& ltrl, int ln);
+    Token(TokenType t, const std::string& lxm, const Literal *ltrl, int ln);
     std::string to_string() const;
 };
 
