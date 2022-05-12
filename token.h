@@ -2,7 +2,10 @@
 #define TOKEN_H_
 
 #include <iostream>
+#include <memory>
 #include <string>
+
+#include "literal.h"
 
 #define ENUM_TOKENTYPES \
     X(LEFT_PAREN) \
@@ -53,16 +56,11 @@ enum class TokenType {
 
 std::string token_type_to_string(const TokenType& token_type);
 
-class Literal {
-public:
-    std::string to_string() const;
-};
-
 class Token {
 public:
     const TokenType type;
     const std::string lexeme;
-    const Literal literal;
+    const std::shared_ptr<Literal> literal;
     const int line;
     Token(TokenType t, const std::string& lxm, const Literal *ltrl, int ln);
     std::string to_string() const;

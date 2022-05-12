@@ -2,9 +2,11 @@
 #define SCANNER_H_
 
 #include <cstdio>
+#include <memory>
 #include <string>
 #include <vector>
 
+#include "literal.h"
 #include "lox.h"
 #include "token.h"
 
@@ -23,6 +25,10 @@ private:
     void add_token(TokenType type, Literal *literal);
     bool is_at_end();
     bool match(char expected);
+    char peek();
+    char peek_next();
+    void string();
+    void number();
     void scan_token();
 };
 
