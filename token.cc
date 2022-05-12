@@ -16,6 +16,6 @@ std::string Token::to_string() const {
 }
 
 std::ostream& operator<<(std::ostream& os, const Token& t) {
-    // os << dt.mo << '/' << dt.da << '/' << dt.yr;
+    os << t.to_string();
     return os;
 }

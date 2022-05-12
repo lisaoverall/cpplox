@@ -1,11 +1,7 @@
 #include "scanner.h"
 
-Scanner::Scanner(const std::string& src) : source(src) {
-    tokens = std::vector<Token>();
-    start = 0;
-    current = 0;
-    line = 1;
-}
+
+Scanner::Scanner(const std::string& src) : source(src) {}
 
 char Scanner::advance() {
     return source[current++];
@@ -17,7 +13,7 @@ void Scanner::add_token(TokenType type) {
 }
 
 void Scanner::add_token(TokenType type, Literal *literal) {
-    std::string text = source.substr(start, current);
+    std::string text = source.substr(start, current-start);
     Token token(type, text, literal, line);
     tokens.push_back(token);
 }
@@ -54,7 +50,7 @@ void Scanner::string() {
     }
     advance(); // closing '"'
     // trim surrounding quotes
-    std::string value = source.substr(start+1, current-1);
+    std::string value = source.substr(start+1, current-1-(start+1));
     StringLiteral string_literal = StringLiteral(value);
     add_token(TokenType::STRING, &string_literal);
 }
@@ -66,9 +62,17 @@ void Scanner::number() {
         advance();
         while (isdigit(peek())) advance();
     }
-    double d = std::stod(source.substr(start, current));
+    double d = std::stod(source.substr(start, current-start));
     NumberLiteral number_literal = NumberLiteral(d);
     add_token(TokenType::NUMBER, &number_literal);
+}
+
+void Scanner::identifier() {
+    while (isalnum(peek())) advance();
+    std::string text = source.substr(start, current-start);
+    std::map<std::string, TokenType>::const_iterator it = keywords.find(text);
+    TokenType type = (it != keywords.end()) ? it->second : TokenType::IDENTIFIER;
+    add_token(type);
 }
 
 void Scanner::scan_token() {
@@ -113,6 +117,8 @@ void Scanner::scan_token() {
         default:
             if (isdigit(c)) {
                 number();
+            } else if (isalpha(c)) {
+                identifier();
             } else {
                 lox::error(line, "Unexpected character.");
             }
