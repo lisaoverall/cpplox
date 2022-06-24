@@ -5,6 +5,7 @@ std::string token_type_to_string(const TokenType& token_type) {
         #define X(token_type) case TokenType::token_type : return #token_type;
         ENUM_TOKENTYPES
         #undef X
+        default: return "";
     }
 }
 

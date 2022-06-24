@@ -19,7 +19,7 @@ void Scanner::add_token(TokenType type, Literal *literal) {
 }
 
 bool Scanner::is_at_end() {
-    return current >= source.length();
+    return static_cast<size_t>(current) >= source.length();
 }
 
 bool Scanner::match(char expected) {
@@ -35,7 +35,7 @@ char Scanner::peek() {
 }
 
 char Scanner::peek_next() {
-    if (current + 1 >= source.length()) return '\0';
+    if (static_cast<size_t>(current + 1) >= source.length()) return '\0';
     return source[current+1];
 }
 
@@ -68,7 +68,7 @@ void Scanner::number() {
 }
 
 void Scanner::identifier() {
-    while (isalnum(peek())) advance();
+    while (isalnum(peek()) || peek() == '_') advance();
     std::string text = source.substr(start, current-start);
     std::map<std::string, TokenType>::const_iterator it = keywords.find(text);
     TokenType type = (it != keywords.end()) ? it->second : TokenType::IDENTIFIER;
@@ -117,7 +117,7 @@ void Scanner::scan_token() {
         default:
             if (isdigit(c)) {
                 number();
-            } else if (isalpha(c)) {
+            } else if (isalpha(c) || c == '_') {
                 identifier();
             } else {
                 lox::error(line, "Unexpected character.");
